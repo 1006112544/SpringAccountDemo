@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:contxt="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--加载配置文件-->
+    <contxt:property-placeholder location="classpath:gfive.properties"/>
+
+    <!--注解扫描，除了Controller，Controller在SpringMVC中扫描-->
+    <contxt:component-scan base-package="com.db">
+        <contxt:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </contxt:component-scan>
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <!--配置LocaleChanceInterceptor-->
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+        <bean class="com.db.interceptor.LogInterceptor"/>
+    </mvc:interceptors>
+
+    <!--<bean id="verifyParam" class="com.dbrvice.aop.BeforeAdiceTest"/>-->
+    <!--AOP测试-->
+    <!--<bean id="BeforeAdvice" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor"-->
+          <!--&gt;-->
+        <!--<property name="advice" ref="verifyParam"></property>-->
+        <!--<property name="pattern" value=".*testAOP.*">-->
+        <!--</property>-->
+        <!--&lt;!&ndash;<property name="patterns">&ndash;&gt;-->
+            <!--&lt;!&ndash;<list>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>testAOP.*</value>&ndash;&gt;-->
+            <!--&lt;!&ndash;</list>&ndash;&gt;-->
+        <!--&lt;!&ndash;</property>&ndash;&gt;-->
+    <!--</bean>-->
+
+    <!--<bean id="proxyFactory" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+        <!--<property name="interceptorNames" value="BeforeAdvice"/>-->
+        <!--<property name="target" ref="blogService"/>-->
+        <!--<property name="optimize" value="true"/>-->
+    <!--</bean>-->
+
+    <!--数据源配置-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--驱动类-->
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <!--url username password-->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--配置初始化属性-->
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <!--最大等待时间-->
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <!--检查是否回收连接的间隔-->
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <!--配置连接的最小生存时间-->
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+    </bean>
+
+
+    <!--SqlSession配置-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--配置文件和映射文件位置-->
+        <property name="mapperLocations" value="classpath:/mappers/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!--扫描注解注册Mapper-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.db"/>
+        <property name="annotationClass" value="com.db.common.annoation.MyBatisDao"/>
+    </bean>
+
+
+    <!--&lt;!&ndash;管理缓存&ndash;&gt;-->
+    <!--<bean id="cahceManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
+        <!--<property name="configLocation" value="classpath:ehcache-local.xml"/>-->
+    <!--</bean>-->
+    <!--配置Spring的jdbcTemplate-->
+
+
+</beans>

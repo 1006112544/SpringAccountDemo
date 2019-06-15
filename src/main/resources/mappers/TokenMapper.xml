@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.dao.TokenDao">
+    <select id="searchToken" parameterType="com.db.bean.UserBean">
+        SELECT * FROM token INNER JOIN user ON user.token_id = token.id WHERE user.id = #{id}
+    </select>
+
+    <update id="updateToken" parameterType="com.db.bean.TokenBean">
+        UPDATE token SET jwt = #{jwt} where id = #{id}
+    </update>
+    
+    <insert id="addToken" parameterType="com.db.bean.TokenBean" useGeneratedKeys="true"
+    keyProperty="id">
+        INSERT INTO token(jwt) VALUES (#{jwt})
+    </insert>
+</mapper>
