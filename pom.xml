@@ -50,7 +50,7 @@
 
   <!--项目配置 -->
   <properties>
-    <spring.version>4.1.9.RELEASE</spring.version>
+    <spring.version>4.2.7.RELEASE</spring.version>
     <mybatis.version>3.2.8</mybatis.version>
     <mybatis-spring.version>1.2.3</mybatis-spring.version>
     <druid.version>1.1.6</druid.version>
